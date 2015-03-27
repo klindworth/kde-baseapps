@@ -37,7 +37,7 @@ public:
     CompatTreeItem(KonqSidebarTree *ptree);// : QTreeWidgetItem(ptree) {}
 
     bool isOpen() const;
-    void setOpen(bool expand);
+    virtual void setOpen(bool expand);
     QPixmap* pixmap(int col) const;
     void setPixmap(int col, QPixmap pix);
     bool isExpandable() const;
