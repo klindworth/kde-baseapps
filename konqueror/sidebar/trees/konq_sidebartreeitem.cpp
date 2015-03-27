@@ -50,7 +50,7 @@ bool CompatTreeItem::isExpandable() const
 }
 
 void CompatTreeItem::setExpandable(bool expandable) {
-    kDebug(1201) << "setExpandable " << (expandable ? "true" : "false");
+    //kDebug(1201) << "setExpandable " << (expandable ? "true" : "false");
     if(expandable)
         setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
     else

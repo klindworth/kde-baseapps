@@ -572,11 +572,11 @@ void KonqSidebarTree::slotMouseButtonPressed( int _button, QTreeWidgetItem* _ite
 
 void KonqSidebarTree::slotMouseButtonClicked(QTreeWidgetItem* _item, int col)
 {
-	KonqSidebarTreeItem * item = static_cast<KonqSidebarTreeItem*>(_item);
-	if(_item && col < 2)
-	{
-			slotExecuted( item );
-	}
+    KonqSidebarTreeItem * item = static_cast<KonqSidebarTreeItem*>(_item);
+    if(_item && col < 2)
+    {
+        slotExecuted( item );
+    }
 }
 
 void KonqSidebarTree::slotAutoOpenFolder()

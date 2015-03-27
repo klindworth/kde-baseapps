@@ -61,7 +61,9 @@ class CompatTree : public QTreeWidget
 {
     Q_OBJECT
 public:
-    CompatTree(QWidget * parent) : QTreeWidget(parent) {}
+    CompatTree(QWidget * parent) : QTreeWidget(parent) {
+        connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)), this, SLOT(slotItemExpanded(QTreeWidgetItem*)));
+    }
 
     //compat functions
     KonqSidebarTreeItem* selectedItem() const {
@@ -116,6 +118,12 @@ public slots:
             setCurrentItem(item);
         else
             clearSelection();
+    }
+
+    void itemExpanded(QTreeWidgetItem *item) {
+        KonqSidebarTreeItem *kitem = dynamic_cast<KonqSidebarTreeItem*>(item);
+        if(kitem)
+            kitem->setOpen(true);
     }
 
 protected:
