@@ -123,7 +123,7 @@ public:
 
 
 KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *parentWidget, ModuleType moduleType, const QString& path )
-    : QTreeWidget( parentWidget ),
+    : CompatTree( parentWidget ),
       m_currentTopLevelItem( 0 ),
       m_scrollingLocked( false ),
       m_collection( 0 )
@@ -304,7 +304,7 @@ void KonqSidebarTree::followURL( const KUrl &url )
     kDebug(1201) << "Not found";
 }
 
-/*void KonqSidebarTree::contentsDragEnterEvent( QDragEnterEvent *ev )
+void KonqSidebarTree::contentsDragEnterEvent( QDragEnterEvent *ev )
 {
     m_dropItem = 0;
     m_currentBeforeDropItem = selectedItem();
@@ -313,12 +313,12 @@ void KonqSidebarTree::followURL( const KUrl &url )
     for( int i = 0; ev->format( i ); i++ )
       if ( *( ev->format( i ) ) )
          m_lstDropFormats.append( ev->format( i ) );
-    K3ListView::contentsDragEnterEvent(ev);
+    CompatTree::contentsDragEnterEvent(ev);
 }
 
 void KonqSidebarTree::contentsDragMoveEvent( QDragMoveEvent *e )
 {
-	QTreeWidgetItem *item = itemAt( contentsToViewport( e->pos() ) );
+    KonqSidebarTreeItem *item = static_cast<KonqSidebarTreeItem*>(itemAt( contentsToViewport( e->pos() ) ));
 
     // Accept drops on the background, if URLs
     if ( !item && m_lstDropFormats.contains("text/uri-list") )
@@ -353,7 +353,7 @@ void KonqSidebarTree::contentsDragMoveEvent( QDragMoveEvent *e )
         }
     } else {
         d->m_dropMode = K3ListViewMode;
-        K3ListView::contentsDragMoveEvent(e);
+        CompatTree::contentsDragMoveEvent(e);
     }
 }
 
@@ -369,7 +369,7 @@ void KonqSidebarTree::contentsDragLeaveEvent( QDragLeaveEvent *ev )
     m_lstDropFormats.clear();
 
     if (d->m_dropMode == K3ListViewMode) {
-        K3ListView::contentsDragLeaveEvent(ev);
+        CompatTree::contentsDragLeaveEvent(ev);
     }
 }
 
@@ -397,9 +397,9 @@ void KonqSidebarTree::contentsDropEvent( QDropEvent *ev )
             selection->drop( ev );
         }
     } else {
-        K3ListView::contentsDropEvent(ev);
+        CompatTree::contentsDropEvent(ev);
     }
-}*/
+}
 
 static QString findUniqueFilename(const QString &path, const QString &filename)
 {
@@ -463,16 +463,16 @@ void KonqSidebarTree::addUrl(KonqSidebarTreeTopLevelItem* item, const KUrl & url
        item->setOpen(true);
 }
 
-/*bool KonqSidebarTree::acceptDrag(QDropEvent* e) const
+bool KonqSidebarTree::acceptDrag(QDropEvent* e) const
 {
     // for K3ListViewMode...
     for( int i = 0; e->format( i ); i++ )
         if ( d->m_dropFormats.contains(e->format( i ) ) )
             return true;
     return false;
-}*/
+}
 
-/*Q3DragObject* KonqSidebarTree::dragObject()
+Q3DragObject* KonqSidebarTree::dragObject()
 {
     KonqSidebarTreeItem* item = static_cast<KonqSidebarTreeItem *>( selectedItem() );
     if ( !item )
@@ -498,7 +498,7 @@ void KonqSidebarTree::addUrl(KonqSidebarTreeTopLevelItem* item, const KUrl & url
 #endif
     return 0;
     //return drag;
-}*/
+}
 
 void KonqSidebarTree::leaveEvent( QEvent *e )
 {

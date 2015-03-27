@@ -38,38 +38,15 @@ public:
     CompatTreeItem(CompatTreeItem *parent) : QTreeWidgetItem(parent) {}
     CompatTreeItem(KonqSidebarTree *ptree);// : QTreeWidgetItem(ptree) {}
 
-    bool isOpen() const
-    {
-        return isExpanded(); //unsure
-    }
-
-    void setOpen(bool expand)
-    {
-        setExpanded(expand);
-    }
-
-    QPixmap* pixmap(int col) const
-    {
-        return new QPixmap(this->icon(col).pixmap());
-    }
-
-    void setPixmap(int col, QPixmap pix)
-    {
-        setIcon(col, QIcon(pix));
-    }
-
-    bool isExpandable() const
-    {
-        return this->childCount() > 0;
-    }
-
-    void setExpandable(bool) {
-    }
-
-    void repaint() {}
-
-    void setVisible(bool) {
-    }
+    bool isOpen() const;
+    void setOpen(bool expand);
+    QPixmap* pixmap(int col) const;
+    void setPixmap(int col, QPixmap pix);
+    bool isExpandable() const;
+    void setExpandable(bool);
+    void repaint();
+    void setVisible(bool);
+    bool isSelectable() const;
 };
 
 /**

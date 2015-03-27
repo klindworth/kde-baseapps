@@ -124,6 +124,7 @@ void KonqSidebarDirTreeItem::paintCell( QPainter *_painter, const QColorGroup & 
         _painter->setFont( f );
     }
 	//TODO KF5 port
+    Q_UNUSED(_cg); Q_UNUSED(_column); Q_UNUSED(_width); Q_UNUSED(_alignment);
 	//Q3ListViewItem::paintCell( _painter, _cg, _column, _width, _alignment );
 }
 

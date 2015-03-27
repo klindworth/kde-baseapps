@@ -60,13 +60,61 @@ enum DropAcceptType {
     K3ListViewMode    // use K3ListView's dnd implementation. accepts mime types set with setDropFormats()
 };
 
+class CompatTree : public QTreeWidget
+{
+public:
+    CompatTree(QWidget * parent) : QTreeWidget(parent) {}
+
+    //compat functions
+    KonqSidebarTreeItem* selectedItem() const {
+        if(!selectedItems().empty())
+            return static_cast<KonqSidebarTreeItem*>(selectedItems().first());
+        else
+            return NULL;
+    }
+
+    KonqSidebarTreeItem* firstChild() const {
+        return static_cast<KonqSidebarTreeItem*>(topLevelItem(0));
+    }
+
+    void ensureItemVisible(QTreeWidgetItem * item)
+    {
+        //TODO KF5 port
+        Q_UNUSED(item);
+    }
+
+    void rename(KonqSidebarTreeItem*,int)
+    {
+        //TODO KF5 port
+    }
+
+    void moveItem(QTreeWidgetItem*, QTreeWidgetItem*, int)
+    {
+        //TODO KF5 port
+    }
+
+    QPoint contentsToViewport ( const QPoint & p )
+    {
+        //TODO KF5 port
+        return p;
+    }
+
+protected:
+    //TODO KF5 port: remember! these are never called, QTreeWidget doesn't have these functions
+    virtual void contentsDragEnterEvent( QDragEnterEvent *e ) {Q_UNUSED(e);};
+    virtual void contentsDragMoveEvent( QDragMoveEvent *e ) {Q_UNUSED(e);};
+    virtual void contentsDragLeaveEvent( QDragLeaveEvent *e ) {Q_UNUSED(e);};
+    virtual void contentsDropEvent( QDropEvent *ev ) {Q_UNUSED(ev);};
+    virtual bool acceptDrag(QDropEvent* e) const {Q_UNUSED(e); return false;}; // used in K3ListView mode
+};
+
 /**
  * The multi-purpose tree view.
  * It parses its configuration (desktop files), each one corresponding to
  * a toplevel item, and creates the modules that will handle the contents
  * of those items.
  */
-class KonqSidebarTree : public QTreeWidget // PORTING NOTE: DO NOT PORT TO QTreeWidget. See http://kde.aliax.net/mockups/konqueror/ first.
+class KonqSidebarTree : public CompatTree // PORTING NOTE: DO NOT PORT TO QTreeWidget. See http://kde.aliax.net/mockups/konqueror/ first.
 {
     Q_OBJECT
 public:
@@ -103,34 +151,6 @@ public:
     // Add an URL
     void addUrl(KonqSidebarTreeTopLevelItem* item, const KUrl&url);
 
-    //compat functions
-    KonqSidebarTreeItem* selectedItem() const {
-        if(!selectedItems().empty())
-            return static_cast<KonqSidebarTreeItem*>(selectedItems().first());
-        else
-            return NULL;
-    }
-
-    KonqSidebarTreeItem* firstChild() const {
-        return static_cast<KonqSidebarTreeItem*>(topLevelItem(0));
-    }
-
-    void ensureItemVisible(QTreeWidgetItem * item)
-    {
-        //TODO KF5 port
-        Q_UNUSED(item);
-    }
-
-    void rename(KonqSidebarTreeItem*,int)
-    {
-        //TODO KF5 port
-    }
-
-    void moveItem(QTreeWidgetItem*, QTreeWidgetItem*, int)
-    {
-
-    }
-
 public slots:
     // Connected to KDirNotify dbus signals
     void slotFilesAdded( const QString & dir );
@@ -146,16 +166,16 @@ public slots:
     }
 
 protected:
-    /*virtual void contentsDragEnterEvent( QDragEnterEvent *e );
+    virtual void contentsDragEnterEvent( QDragEnterEvent *e );
     virtual void contentsDragMoveEvent( QDragMoveEvent *e );
     virtual void contentsDragLeaveEvent( QDragLeaveEvent *e );
     virtual void contentsDropEvent( QDropEvent *ev );
-    virtual bool acceptDrag(QDropEvent* e) const;*/ // used in K3ListView mode
+    virtual bool acceptDrag(QDropEvent* e) const; // used in K3ListView mode
 
     virtual bool eventFilter(QObject* obj, QEvent* ev);
     virtual void leaveEvent( QEvent * );
 
-    //virtual Q3DragObject* dragObject();
+    virtual Q3DragObject* dragObject();
 
 
 private slots:
