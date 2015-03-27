@@ -65,6 +65,7 @@ KonqSidebarDirTreeItem::~KonqSidebarDirTreeItem()
 
 void KonqSidebarDirTreeItem::reset()
 {
+	kDebug(1201) << "KonqSidebarDirTreeItem::reset";
     bool expandable = true;
     // For local dirs, find out if they have no children, to remove the "+"
     if ( m_fileItem.isDir() )

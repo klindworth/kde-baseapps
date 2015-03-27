@@ -330,6 +330,7 @@ void KonqSidebarDirTreeModule::openSubFolder( KonqSidebarTreeItem *item )
 
 void KonqSidebarDirTreeModule::listDirectory( KonqSidebarTreeItem *item )
 {
+	kDebug(1201) << "KonqSidebarDirTreeItem::listDirectory";
     // This causes a reparsing, but gets rid of the trailing slash
     QString strUrl = item->externalURL().url( KUrl::RemoveTrailingSlash );
     KUrl url( strUrl );

@@ -21,6 +21,8 @@
 #include "konq_sidebartree.h"
 //#include "konq_sidebartreepart.h"
 
+#include "kdebug.h"
+
 CompatTreeItem::CompatTreeItem(KonqSidebarTree *ptree) : QTreeWidgetItem(ptree) {}
 bool CompatTreeItem::isOpen() const
 {
@@ -47,7 +49,8 @@ bool CompatTreeItem::isExpandable() const
     return this->childCount() > 0;
 }
 
-void CompatTreeItem::setExpandable(bool) {
+void CompatTreeItem::setExpandable(bool exp) {
+	kDebug(1201) << "setExpandable " << (exp ? "true" : "false");
 }
 
 void CompatTreeItem::repaint() {}
