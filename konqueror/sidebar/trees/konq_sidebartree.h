@@ -32,6 +32,8 @@
 #include <QtCore/QEvent>
 #include <QTreeWidget>
 
+#include <kdebug.h>
+
 class KonqSidebarOldTreeModule;
 class KonqSidebarTreeModule;
 class KonqSidebarTreeItem;
@@ -121,6 +123,7 @@ public slots:
     }
 
     void itemExpanded(QTreeWidgetItem *item) {
+        kDebug(1201) << "itemExpanded";
         KonqSidebarTreeItem *kitem = dynamic_cast<KonqSidebarTreeItem*>(item);
         if(kitem)
             kitem->setOpen(true);
@@ -148,6 +151,10 @@ protected:
 
     virtual void dropEvent ( QDropEvent * event ) {
         contentsDropEvent(event);
+    }
+
+    void mousePressEvent(QMouseEvent *event) {
+        QTreeWidget::mousePressEvent(event);
     }
 };
 

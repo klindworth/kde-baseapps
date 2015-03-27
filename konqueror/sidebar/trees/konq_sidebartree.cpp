@@ -163,8 +163,10 @@ KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *par
              this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
     connect( this, SIGNAL(mouseButtonPressed(int,QTreeWidgetItem*,QPoint,int)),
              this, SLOT(slotMouseButtonPressed(int,QTreeWidgetItem*,QPoint,int)) );
-	connect( this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
-             this, SLOT(slotMouseButtonClicked(int,QTreeWidgetItem*,QPoint,int)) );
+    //connect( this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
+    //         this, SLOT(slotMouseButtonClicked(int,QTreeWidgetItem*,QPoint,int)) );
+    connect(this, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(slotMouseButtonClicked(QTreeWidgetItem*,int)));
+
     connect( this, SIGNAL(returnPressed(QTreeWidgetItem*)),
              this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
 	connect( this, SIGNAL(itemSelectionChanged()),
