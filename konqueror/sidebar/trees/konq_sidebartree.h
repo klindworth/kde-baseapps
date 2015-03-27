@@ -86,11 +86,24 @@ public:
     void rename(KonqSidebarTreeItem*,int)
     {
         //TODO KF5 port
+        //starts editing for the item?
     }
 
-    void moveItem(QTreeWidgetItem*, QTreeWidgetItem*, int)
+    void moveItem(QTreeWidgetItem* item, QTreeWidgetItem* parent, QTreeWidgetItem* after)
     {
-        //TODO KF5 port
+        //TODO KF5 port, untested
+        if(item->parent())
+        {
+            QTreeWidgetItem* oldparent = item->parent();
+            oldparent->takeChild(oldparent->indexOfChild(item));
+        }
+        else
+            takeTopLevelItem(indexOfTopLevelItem(item));
+
+        if(parent)
+            parent->insertChild(parent->indexOfChild(after)+1, item);
+        else
+            insertTopLevelItem(indexOfTopLevelItem(after)+1, item);
     }
 
     QPoint contentsToViewport ( const QPoint & p )
@@ -132,11 +145,11 @@ protected:
         contentsDropEvent(event);
     }
 
-    virtual void setContentsPos( int x, int y ) {
+    /*virtual void setContentsPos( int x, int y ) {
         //TODO: KF5 port
         Q_UNUSED(x);
         Q_UNUSED(y);
-    }
+    }*/
 };
 
 /**
@@ -166,7 +179,7 @@ public:
 
     KActionCollection *actionCollection() { return m_collection; }
 
-    void lockScrolling( bool lock ) { m_scrollingLocked = lock; }
+    //void lockScrolling( bool lock ) { m_scrollingLocked = lock; }
 
     bool isOpeningFirstChild() const { return m_bOpeningFirstChild; }
 
@@ -188,7 +201,7 @@ public slots:
     void slotFilesRemoved( const QStringList & urls );
     void slotFilesChanged( const QStringList & urls );
 
-    virtual void setContentsPos( int x, int y );
+    //virtual void setContentsPos( int x, int y );
 
 protected:
     virtual void contentsDragEnterEvent( QDragEnterEvent *e );

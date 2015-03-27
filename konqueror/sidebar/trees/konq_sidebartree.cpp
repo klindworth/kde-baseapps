@@ -125,7 +125,7 @@ public:
 KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *parentWidget, ModuleType moduleType, const QString& path )
     : CompatTree( parentWidget ),
       m_currentTopLevelItem( 0 ),
-      m_scrollingLocked( false ),
+      //m_scrollingLocked( false ),
       m_collection( 0 )
 {
     d = new KonqSidebarTree_Internal;
@@ -151,10 +151,11 @@ KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *par
     m_dropItem = 0;
     m_bOpeningFirstChild=false;
 
-    //TODO KF5 Port
-    //addColumn( QString() );
+    //TODO KF5 Port, test
+    setColumnCount(1); //addColumn( QString() );
     header()->hide();
-    //setTreeStepSize(15);
+    setIndentation(15); //setTreeStepSize(15);
+
 
     m_autoOpenTimer = new QTimer( this );
     connect( m_autoOpenTimer, SIGNAL(timeout()),
@@ -914,11 +915,11 @@ KonqSidebarTreeItem * KonqSidebarTree::currentItem() const
     return static_cast<KonqSidebarTreeItem *>( selectedItem() );
 }
 
-void KonqSidebarTree::setContentsPos( int x, int y )
+/*void KonqSidebarTree::setContentsPos( int x, int y )
 {
     if ( !m_scrollingLocked )
         CompatTree::setContentsPos( x, y );
-}
+}*/
 
 void KonqSidebarTree::slotItemRenamed(QTreeWidgetItem* item, const QString &name, int col)
 {
