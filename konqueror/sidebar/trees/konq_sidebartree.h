@@ -100,12 +100,29 @@ public:
     }
 
 protected:
+
     //TODO KF5 port: remember! these are never called, QTreeWidget doesn't have these functions
-    virtual void contentsDragEnterEvent( QDragEnterEvent *e ) {Q_UNUSED(e);};
-    virtual void contentsDragMoveEvent( QDragMoveEvent *e ) {Q_UNUSED(e);};
-    virtual void contentsDragLeaveEvent( QDragLeaveEvent *e ) {Q_UNUSED(e);};
-    virtual void contentsDropEvent( QDropEvent *ev ) {Q_UNUSED(ev);};
-    virtual bool acceptDrag(QDropEvent* e) const {Q_UNUSED(e); return false;}; // used in K3ListView mode
+    virtual void contentsDragEnterEvent( QDragEnterEvent *e ) {Q_UNUSED(e);}
+    virtual void contentsDragMoveEvent( QDragMoveEvent *e ) {Q_UNUSED(e);}
+    virtual void contentsDragLeaveEvent( QDragLeaveEvent *e ) {Q_UNUSED(e);}
+    virtual void contentsDropEvent( QDropEvent *ev ) {Q_UNUSED(ev);}
+    virtual bool acceptDrag(QDropEvent* e) const {Q_UNUSED(e); return false;} // used in K3ListView mode
+
+    virtual void dragEnterEvent( QDragEnterEvent * event ) {
+        contentsDragEnterEvent(event);
+    }
+
+    virtual void dragLeaveEvent( QDragLeaveEvent * event ) {
+        contentsDragLeaveEvent(event);
+    }
+
+    virtual void dragMoveEvent ( QDragMoveEvent * event ) {
+        contentsDragMoveEvent(event);
+    }
+
+    virtual void dropEvent ( QDropEvent * event ) {
+        contentsDropEvent(event);
+    }
 };
 
 /**
