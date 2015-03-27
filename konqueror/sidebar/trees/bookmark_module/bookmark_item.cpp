@@ -71,10 +71,10 @@ void KonqSidebarBookmarkItem::itemSelected()
     tree()->enableActions( false, false, false );
 }
 
-QString KonqSidebarBookmarkItem::key( int /*column*/, bool /*ascending*/ ) const
-{
-    return QString::number(m_key).rightJustified( 5, '0' );
-}
+//QString KonqSidebarBookmarkItem::key( int /*column*/, bool /*ascending*/ ) const
+//{
+//    return QString::number(m_key).rightJustified( 5, '0' );
+//}
 
 KBookmark &KonqSidebarBookmarkItem::bookmark()
 {

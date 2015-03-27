@@ -59,15 +59,15 @@ KonqSidebarBookmarkModule::KonqSidebarBookmarkModule( KonqSidebarTree * parentTr
     formats << "text/uri-list" << "application/x-xbel" << "text/plain";
     tree()->setDropFormats(formats);
 
-    connect(tree(), SIGNAL(moved(Q3ListViewItem*,Q3ListViewItem*,Q3ListViewItem*)),
-            this,  SLOT(slotMoved(Q3ListViewItem*,Q3ListViewItem*,Q3ListViewItem*)));
-    connect(tree(), SIGNAL(dropped(K3ListView*,QDropEvent*,Q3ListViewItem*,Q3ListViewItem*)),
-            this,  SLOT(slotDropped(K3ListView*,QDropEvent*,Q3ListViewItem*,Q3ListViewItem*)));
+    connect(tree(), SIGNAL(moved(QTreeWidgetItem*,QTreeWidgetItem*,QTreeWidgetItem*)),
+            this,  SLOT(slotMoved(QTreeWidgetItem*,QTreeWidgetItem*,QTreeWidgetItem*)));
+    connect(tree(), SIGNAL(dropped(K3ListView*,QDropEvent*,QTreeWidgetItem*,QTreeWidgetItem*)),
+            this,  SLOT(slotDropped(K3ListView*,QDropEvent*,QTreeWidgetItem*,QTreeWidgetItem*)));
 
-    connect(tree(), SIGNAL(expanded(Q3ListViewItem*)),
-            this,  SLOT(slotOpenChange(Q3ListViewItem*)));
-    connect(tree(), SIGNAL(collapsed(Q3ListViewItem*)),
-            this,  SLOT(slotOpenChange(Q3ListViewItem*)));
+    connect(tree(), SIGNAL(expanded(QTreeWidgetItem*)),
+            this,  SLOT(slotOpenChange(QTreeWidgetItem*)));
+    connect(tree(), SIGNAL(collapsed(QTreeWidgetItem*)),
+            this,  SLOT(slotOpenChange(QTreeWidgetItem*)));
 
     m_collection = new KActionCollection( this );
     QAction *action = m_collection->addAction("create_folder");
@@ -172,7 +172,7 @@ void KonqSidebarBookmarkModule::showPopupMenu()
     delete menu;
 }
 
-void KonqSidebarBookmarkModule::slotMoved(Q3ListViewItem *i, Q3ListViewItem*, Q3ListViewItem *after)
+void KonqSidebarBookmarkModule::slotMoved(QTreeWidgetItem *i, QTreeWidgetItem*, QTreeWidgetItem *after)
 {
     KonqSidebarBookmarkItem *item = dynamic_cast<KonqSidebarBookmarkItem*>( i );
     if (!item)
@@ -250,7 +250,7 @@ void KonqSidebarBookmarkModule::slotMoved(Q3ListViewItem *i, Q3ListViewItem*, Q3
     }
 }
 
-void KonqSidebarBookmarkModule::slotDropped(K3ListView *, QDropEvent *e, Q3ListViewItem *parent, Q3ListViewItem *after)
+void KonqSidebarBookmarkModule::slotDropped(K3ListView *, QDropEvent *e, QTreeWidgetItem *parent, QTreeWidgetItem *after)
 {
     if (!KBookmark::List::canDecode(e->mimeData()))
         return;
@@ -462,7 +462,7 @@ void KonqSidebarBookmarkModule::slotCopyLocation()
     }
 }
 
-void KonqSidebarBookmarkModule::slotOpenChange(Q3ListViewItem* i)
+void KonqSidebarBookmarkModule::slotOpenChange(QTreeWidgetItem* i)
 {
     if (m_ignoreOpenChange)
         return;
@@ -493,9 +493,9 @@ void KonqSidebarBookmarkModule::slotBookmarksChanged( const QString & groupAddre
     if (!group.isNull() && item)
     {
         // Delete all children of item
-        Q3ListViewItem * child = item->firstChild();
+        KonqSidebarTreeItem * child = item->firstChild();
         while( child ) {
-            Q3ListViewItem * next = child->nextSibling();
+            KonqSidebarTreeItem * next = child->nextSibling();
             delete child;
             child = next;
         }
@@ -542,7 +542,7 @@ void KonqSidebarBookmarkModule::fillGroup( KonqSidebarTreeItem * parentItem, con
 // Borrowed from KEditBookmarks
 KonqSidebarBookmarkItem * KonqSidebarBookmarkModule::findByAddress( const QString & address ) const
 {
-    Q3ListViewItem * item = m_topLevelItem;
+    KonqSidebarTreeItem * item = static_cast<KonqSidebarTreeItem*>(m_topLevelItem);
     // The address is something like /5/10/2
     const QStringList addresses = address.split('/', QString::SkipEmptyParts);
     for ( QStringList::const_iterator it = addresses.constBegin() ; it != addresses.constEnd() ; ++it )

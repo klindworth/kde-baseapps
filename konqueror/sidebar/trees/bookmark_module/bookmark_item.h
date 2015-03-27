@@ -49,7 +49,7 @@ public:
     // Called when this item is selected
     virtual void itemSelected();
 
-    virtual QString key( int column, bool /*ascending*/ ) const;
+	//virtual QString key( int column, bool /*ascending*/ ) const;
 
     virtual KBookmark &bookmark();
 

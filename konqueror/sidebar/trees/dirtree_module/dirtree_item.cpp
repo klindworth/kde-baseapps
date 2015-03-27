@@ -123,7 +123,8 @@ void KonqSidebarDirTreeItem::paintCell( QPainter *_painter, const QColorGroup & 
         f.setItalic( true );
         _painter->setFont( f );
     }
-    Q3ListViewItem::paintCell( _painter, _cg, _column, _width, _alignment );
+	//TODO KF5 port
+	//Q3ListViewItem::paintCell( _painter, _cg, _column, _width, _alignment );
 }
 
 KUrl KonqSidebarDirTreeItem::externalURL() const
@@ -275,7 +276,7 @@ void KonqSidebarDirTreeItem::paste()
         kDebug(1201) << "move (from clipboard data) = " << move;
     }
 
-    KIO::pasteClipboard( m_fileItem.url(), listView(), move );
+	KIO::pasteClipboard( m_fileItem.url(), this->treeWidget(), move );
 }
 
 void KonqSidebarDirTreeItem::trash()

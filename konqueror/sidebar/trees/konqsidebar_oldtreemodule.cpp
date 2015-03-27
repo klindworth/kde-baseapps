@@ -36,12 +36,13 @@ KonqSidebarOldTreeModule::KonqSidebarOldTreeModule(const KComponentData &compone
 	widget = new KVBox( parent );
         // TODO use QVBoxLayout
 
-	if (configGroup.readEntry("X-KDE-SearchableTreeModule", false)) {
+	//TODO KF5
+	/*if (configGroup.readEntry("X-KDE-SearchableTreeModule", false)) {
 		KVBox* searchLine = new KVBox(widget);
 		tree = new KonqSidebarTree(this, widget, virt, path);
 		new K3ListViewSearchLineWidget(tree,searchLine);
 	}
-	else {
+	else*/ {
 		tree = new KonqSidebarTree(this, widget, virt, path);
 	}
 
@@ -73,22 +74,24 @@ void KonqSidebarOldTreeModule::handleURL(const KUrl &url)
 
 void KonqSidebarOldTreeModule::cut()
 {
-    QMimeData* mimeData = new QMimeData;
+	//TODO KF5
+	QMimeData* mimeData = new QMimeData;
     if ( static_cast<KonqSidebarTreeItem*>(tree->selectedItem())->populateMimeData( mimeData, true ) )
         QApplication::clipboard()->setMimeData( mimeData );
     else
-        delete mimeData;
+		delete mimeData;
 }
 
 void KonqSidebarOldTreeModule::copy()
 {
-    kDebug();
+	//TODO KF5
+	kDebug();
     QMimeData* mimeData = new QMimeData;
     if ( static_cast<KonqSidebarTreeItem*>(tree->selectedItem())->populateMimeData( mimeData, false ) ) {
         kDebug() << "setting" << mimeData->formats();
         QApplication::clipboard()->setMimeData( mimeData );
     } else
-        delete mimeData;
+		delete mimeData;
 }
 
 void KonqSidebarOldTreeModule::paste()

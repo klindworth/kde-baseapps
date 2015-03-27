@@ -33,6 +33,7 @@
 #include <QKeyEvent>
 #include <Qt3Support/Q3PtrList>
 #include <QtCore/QEvent>
+#include <QTreeWidget>
 
 class KonqSidebarOldTreeModule;
 class KonqSidebarTreeModule;
@@ -65,7 +66,7 @@ enum DropAcceptType {
  * a toplevel item, and creates the modules that will handle the contents
  * of those items.
  */
-class KonqSidebarTree : public K3ListView // PORTING NOTE: DO NOT PORT TO QTreeWidget. See http://kde.aliax.net/mockups/konqueror/ first.
+class KonqSidebarTree : public QTreeWidget // PORTING NOTE: DO NOT PORT TO QTreeWidget. See http://kde.aliax.net/mockups/konqueror/ first.
 {
     Q_OBJECT
 public:
@@ -102,6 +103,34 @@ public:
     // Add an URL
     void addUrl(KonqSidebarTreeTopLevelItem* item, const KUrl&url);
 
+    //compat functions
+    KonqSidebarTreeItem* selectedItem() const {
+        if(!selectedItems().empty())
+            return static_cast<KonqSidebarTreeItem*>(selectedItems().first());
+        else
+            return NULL;
+    }
+
+    KonqSidebarTreeItem* firstChild() const {
+        return static_cast<KonqSidebarTreeItem*>(topLevelItem(0));
+    }
+
+    void ensureItemVisible(QTreeWidgetItem * item)
+    {
+        //TODO KF5 port
+        Q_UNUSED(item);
+    }
+
+    void rename(KonqSidebarTreeItem*,int)
+    {
+        //TODO KF5 port
+    }
+
+    void moveItem(QTreeWidgetItem*, QTreeWidgetItem*, int)
+    {
+
+    }
+
 public slots:
     // Connected to KDirNotify dbus signals
     void slotFilesAdded( const QString & dir );
@@ -110,23 +139,30 @@ public slots:
 
     virtual void setContentsPos( int x, int y );
 
+    //compat
+    void setSelected(QTreeWidgetItem *item, bool unknown = false) {
+        Q_UNUSED(unknown);
+        setCurrentItem(item);
+    }
+
 protected:
-    virtual void contentsDragEnterEvent( QDragEnterEvent *e );
+    /*virtual void contentsDragEnterEvent( QDragEnterEvent *e );
     virtual void contentsDragMoveEvent( QDragMoveEvent *e );
     virtual void contentsDragLeaveEvent( QDragLeaveEvent *e );
     virtual void contentsDropEvent( QDropEvent *ev );
-    virtual bool acceptDrag(QDropEvent* e) const; // used in K3ListView mode
+    virtual bool acceptDrag(QDropEvent* e) const;*/ // used in K3ListView mode
 
     virtual bool eventFilter(QObject* obj, QEvent* ev);
     virtual void leaveEvent( QEvent * );
 
-    virtual Q3DragObject* dragObject();
+    //virtual Q3DragObject* dragObject();
+
 
 private slots:
-    void slotDoubleClicked( Q3ListViewItem *item );
-    void slotExecuted( Q3ListViewItem *item );
-    void slotMouseButtonPressed(int _button, Q3ListViewItem* _item, const QPoint&, int col);
-    void slotMouseButtonClicked(int _button, Q3ListViewItem* _item, const QPoint&, int col);
+    void slotDoubleClicked( QTreeWidgetItem *item );
+    void slotExecuted( QTreeWidgetItem *item );
+    void slotMouseButtonPressed(int _button, QTreeWidgetItem* _item, const QPoint&, int col);
+    void slotMouseButtonClicked(int _button, QTreeWidgetItem* _item, const QPoint&, int col);
     void slotSelectionChanged();
 
     void slotAnimation();
@@ -135,7 +171,7 @@ private slots:
 
     void rescanConfiguration();
 
-    void slotItemRenamed(Q3ListViewItem*, const QString &, int);
+    void slotItemRenamed(QTreeWidgetItem*, const QString &, int);
 
     void slotCreateFolder();
     void slotDelete();
@@ -179,8 +215,8 @@ private:
 
     QTimer *m_animationTimer;
 
-    Q3ListViewItem *m_currentBeforeDropItem; // The item that was current before the drag-enter event happened
-    Q3ListViewItem *m_dropItem; // The item we are moving the mouse over (during a drag)
+    KonqSidebarTreeItem *m_currentBeforeDropItem; // The item that was current before the drag-enter event happened
+    KonqSidebarTreeItem *m_dropItem; // The item we are moving the mouse over (during a drag)
     Q3StrList m_lstDropFormats;
 
     QTimer *m_autoOpenTimer;

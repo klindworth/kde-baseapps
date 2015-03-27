@@ -25,18 +25,59 @@
 #include <Qt3Support/Q3ListView>
 #include <Qt3Support/Q3UriDrag>
 #include <kurl.h>
+#include <QTreeWidgetItem>
 
 class KonqSidebarTree;
 class KonqSidebarTreeItem;
 class KonqSidebarTreeModule;
 class KonqSidebarTreeTopLevelItem;
 
+class CompatTreeItem : public QTreeWidgetItem
+{
+public:
+    CompatTreeItem(CompatTreeItem *parent) : QTreeWidgetItem(parent) {}
+    CompatTreeItem(KonqSidebarTree *ptree);// : QTreeWidgetItem(ptree) {}
+
+    bool isOpen() const
+    {
+        return isExpanded(); //unsure
+    }
+
+    void setOpen(bool expand)
+    {
+        setExpanded(expand);
+    }
+
+    QPixmap* pixmap(int col) const
+    {
+        return new QPixmap(this->icon(col).pixmap());
+    }
+
+    void setPixmap(int col, QPixmap pix)
+    {
+        setIcon(col, QIcon(pix));
+    }
+
+    bool isExpandable() const
+    {
+        return this->childCount() > 0;
+    }
+
+    void setExpandable(bool) {
+    }
+
+    void repaint() {}
+
+    void setVisible(bool) {
+    }
+};
+
 /**
  * The base class for any item in the tree.
  * Items belonging to a given module are created and managed by the module,
  * but they should all be KonqSidebarTreeItems, for the event handling in KonqSidebarTree.
  */
-class KonqSidebarTreeItem : public Q3ListViewItem
+class KonqSidebarTreeItem : public CompatTreeItem
 {
 public:
     // Create an item under another one
@@ -98,10 +139,22 @@ public:
     // returns the tree inside which this item is
     KonqSidebarTree *tree() const;
 
-    virtual QString key( int column, bool ) const { return text( column ).toLower(); }
+    //virtual QString key( int column, bool ) const { return text( column ).toLower(); }
 
     // List of alternative names (URLs) this entry is known under
     QStringList alias;
+
+    //compat functions
+    KonqSidebarTreeItem* firstChild()
+    {
+        return static_cast<KonqSidebarTreeItem*>(this->child(0));
+    }
+
+    KonqSidebarTreeItem* nextSibling()
+    {
+        return static_cast<KonqSidebarTreeItem*>(this->parent()->child(this->parent()->indexOfChild(this)+1));
+    }
+
 protected:
     // Create an item at the toplevel - only for toplevel items -> protected
     KonqSidebarTreeItem( KonqSidebarTree *parent, KonqSidebarTreeTopLevelItem *topLevelItem );
@@ -109,6 +162,8 @@ protected:
     KonqSidebarTreeTopLevelItem *m_topLevelItem;
     bool m_bListable:1;
     bool m_bClickable:1;
+
+
 };
 
 #endif // KONQ_SIDEBARTREEITEM_H

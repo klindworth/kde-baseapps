@@ -21,14 +21,16 @@
 #include "konq_sidebartree.h"
 //#include "konq_sidebartreepart.h"
 
+CompatTreeItem::CompatTreeItem(KonqSidebarTree *ptree) : QTreeWidgetItem(ptree) {}
+
 KonqSidebarTreeItem::KonqSidebarTreeItem( KonqSidebarTreeItem *parentItem, KonqSidebarTreeTopLevelItem *topLevelItem )
-    : Q3ListViewItem( parentItem )
+    : CompatTreeItem( parentItem )
 {
     initItem( topLevelItem );
 }
 
 KonqSidebarTreeItem::KonqSidebarTreeItem( KonqSidebarTree *parent, KonqSidebarTreeTopLevelItem *topLevelItem )
-    : Q3ListViewItem( parent )
+    : CompatTreeItem( parent )
 {
     initItem( topLevelItem );
 }
@@ -61,5 +63,6 @@ KonqSidebarTreeModule * KonqSidebarTreeItem::module() const
 
 KonqSidebarTree * KonqSidebarTreeItem::tree() const
 {
-    return static_cast<KonqSidebarTree *>(listView());
+    //return static_cast<KonqSidebarTree *>(listView());
+    return static_cast<KonqSidebarTree *>(this->treeWidget());
 }

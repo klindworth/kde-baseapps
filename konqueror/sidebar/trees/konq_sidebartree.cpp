@@ -56,6 +56,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include <QHeaderView>
+
 
 static const int autoOpenTimeout = 750;
 
@@ -121,7 +123,7 @@ public:
 
 
 KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *parentWidget, ModuleType moduleType, const QString& path )
-    : K3ListView( parentWidget ),
+    : QTreeWidget( parentWidget ),
       m_currentTopLevelItem( 0 ),
       m_scrollingLocked( false ),
       m_collection( 0 )
@@ -136,7 +138,7 @@ KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *par
     installEventFilter(this);
     m_lstModules.setAutoDelete( true );
 
-    setSelectionMode( Q3ListView::Single );
+    setSelectionMode( QTreeWidget::SingleSelection );
     setDragEnabled(true);
 
     m_sidebarModule = parent;
@@ -149,29 +151,30 @@ KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *par
     m_dropItem = 0;
     m_bOpeningFirstChild=false;
 
-    addColumn( QString() );
+    //TODO KF5 Port
+    //addColumn( QString() );
     header()->hide();
-    setTreeStepSize(15);
+    //setTreeStepSize(15);
 
     m_autoOpenTimer = new QTimer( this );
     connect( m_autoOpenTimer, SIGNAL(timeout()),
              this, SLOT(slotAutoOpenFolder()) );
 
-    connect( this, SIGNAL(doubleClicked(Q3ListViewItem*)),
-             this, SLOT(slotDoubleClicked(Q3ListViewItem*)) );
-    connect( this, SIGNAL(mouseButtonPressed(int,Q3ListViewItem*,QPoint,int)),
-             this, SLOT(slotMouseButtonPressed(int,Q3ListViewItem*,QPoint,int)) );
-    connect( this, SIGNAL(mouseButtonClicked(int,Q3ListViewItem*,QPoint,int)),
-             this, SLOT(slotMouseButtonClicked(int,Q3ListViewItem*,QPoint,int)) );
-    connect( this, SIGNAL(returnPressed(Q3ListViewItem*)),
-             this, SLOT(slotDoubleClicked(Q3ListViewItem*)) );
+    connect( this, SIGNAL(doubleClicked(QTreeWidgetItem*)),
+             this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
+    connect( this, SIGNAL(mouseButtonPressed(int,QTreeWidgetItem*,QPoint,int)),
+             this, SLOT(slotMouseButtonPressed(int,QTreeWidgetItem*,QPoint,int)) );
+    connect( this, SIGNAL(mouseButtonClicked(int,QTreeWidgetItem*,QPoint,int)),
+             this, SLOT(slotMouseButtonClicked(int,QTreeWidgetItem*,QPoint,int)) );
+    connect( this, SIGNAL(returnPressed(QTreeWidgetItem*)),
+             this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
     connect( this, SIGNAL(selectionChanged()),
              this, SLOT(slotSelectionChanged()) );
     connect(qApp->clipboard(), SIGNAL(dataChanged()),
             this, SLOT(slotSelectionChanged())); // so that "paste" can be updated
 
-    connect( this, SIGNAL(itemRenamed(Q3ListViewItem*,QString,int)),
-             this, SLOT(slotItemRenamed(Q3ListViewItem*,QString,int)));
+    connect( this, SIGNAL(itemRenamed(QTreeWidgetItem*,QString,int)),
+             this, SLOT(slotItemRenamed(QTreeWidgetItem*,QString,int)));
 
     if (moduleType == VIRT_Folder) {
         m_dirtreeDir.dir.setPath(KGlobal::dirs()->saveLocation("data","konqsidebartng/virtual_folders/"+path+'/'));
@@ -301,7 +304,7 @@ void KonqSidebarTree::followURL( const KUrl &url )
     kDebug(1201) << "Not found";
 }
 
-void KonqSidebarTree::contentsDragEnterEvent( QDragEnterEvent *ev )
+/*void KonqSidebarTree::contentsDragEnterEvent( QDragEnterEvent *ev )
 {
     m_dropItem = 0;
     m_currentBeforeDropItem = selectedItem();
@@ -315,7 +318,7 @@ void KonqSidebarTree::contentsDragEnterEvent( QDragEnterEvent *ev )
 
 void KonqSidebarTree::contentsDragMoveEvent( QDragMoveEvent *e )
 {
-    Q3ListViewItem *item = itemAt( contentsToViewport( e->pos() ) );
+	QTreeWidgetItem *item = itemAt( contentsToViewport( e->pos() ) );
 
     // Accept drops on the background, if URLs
     if ( !item && m_lstDropFormats.contains("text/uri-list") )
@@ -396,7 +399,7 @@ void KonqSidebarTree::contentsDropEvent( QDropEvent *ev )
     } else {
         K3ListView::contentsDropEvent(ev);
     }
-}
+}*/
 
 static QString findUniqueFilename(const QString &path, const QString &filename)
 {
@@ -460,16 +463,16 @@ void KonqSidebarTree::addUrl(KonqSidebarTreeTopLevelItem* item, const KUrl & url
        item->setOpen(true);
 }
 
-bool KonqSidebarTree::acceptDrag(QDropEvent* e) const
+/*bool KonqSidebarTree::acceptDrag(QDropEvent* e) const
 {
     // for K3ListViewMode...
     for( int i = 0; e->format( i ); i++ )
         if ( d->m_dropFormats.contains(e->format( i ) ) )
             return true;
     return false;
-}
+}*/
 
-Q3DragObject* KonqSidebarTree::dragObject()
+/*Q3DragObject* KonqSidebarTree::dragObject()
 {
     KonqSidebarTreeItem* item = static_cast<KonqSidebarTreeItem *>( selectedItem() );
     if ( !item )
@@ -495,29 +498,32 @@ Q3DragObject* KonqSidebarTree::dragObject()
 #endif
     return 0;
     //return drag;
-}
+}*/
 
 void KonqSidebarTree::leaveEvent( QEvent *e )
 {
-    K3ListView::leaveEvent( e );
+    QTreeWidget::leaveEvent(e);
+    //K3ListView::leaveEvent( e );
 //    emitStatusBarText( QString() );
 }
 
 
-void KonqSidebarTree::slotDoubleClicked( Q3ListViewItem *item )
+void KonqSidebarTree::slotDoubleClicked( QTreeWidgetItem *item )
 {
     //kDebug(1201) << item;
     if ( !item )
         return;
 
-    if ( !static_cast<KonqSidebarTreeItem*>(item)->isClickable() )
+    KonqSidebarTreeItem* konq_item = static_cast<KonqSidebarTreeItem*>(item);
+
+    if ( !konq_item->isClickable() )
         return;
 
-    slotExecuted( item );
-    item->setOpen( !item->isOpen() );
+    slotExecuted( konq_item );
+    konq_item->setOpen( !konq_item->isOpen() );
 }
 
-void KonqSidebarTree::slotExecuted( Q3ListViewItem *item )
+void KonqSidebarTree::slotExecuted( QTreeWidgetItem *item )
 {
     kDebug(1201) << item;
     if ( !item )
@@ -537,7 +543,7 @@ void KonqSidebarTree::slotExecuted( Q3ListViewItem *item )
         openUrlRequest( externalURL, args, browserArgs );
 }
 
-void KonqSidebarTree::slotMouseButtonPressed( int _button, Q3ListViewItem* _item, const QPoint&, int col )
+void KonqSidebarTree::slotMouseButtonPressed( int _button, QTreeWidgetItem* _item, const QPoint&, int col )
 {
     KonqSidebarTreeItem * item = static_cast<KonqSidebarTreeItem*>( _item );
     if (_button == Qt::RightButton)
@@ -550,7 +556,7 @@ void KonqSidebarTree::slotMouseButtonPressed( int _button, Q3ListViewItem* _item
     }
 }
 
-void KonqSidebarTree::slotMouseButtonClicked(int _button, Q3ListViewItem* _item, const QPoint&, int col)
+void KonqSidebarTree::slotMouseButtonClicked(int _button, QTreeWidgetItem* _item, const QPoint&, int col)
 {
     KonqSidebarTreeItem * item = static_cast<KonqSidebarTreeItem*>(_item);
     if(_item && col < 2)
@@ -886,11 +892,12 @@ KonqSidebarTreeItem * KonqSidebarTree::currentItem() const
 
 void KonqSidebarTree::setContentsPos( int x, int y )
 {
-    if ( !m_scrollingLocked )
-        K3ListView::setContentsPos( x, y );
+    //TODO KF5 port
+    //if ( !m_scrollingLocked )
+        //K3ListView::setContentsPos( x, y );
 }
 
-void KonqSidebarTree::slotItemRenamed(Q3ListViewItem* item, const QString &name, int col)
+void KonqSidebarTree::slotItemRenamed(QTreeWidgetItem* item, const QString &name, int col)
 {
     Q_ASSERT(col==0);
     if (col != 0) return;
@@ -1049,7 +1056,7 @@ void KonqSidebarTree::slotCopyLocation()
 #endif
 void KonqSidebarTreeToolTip::maybeTip( const QPoint &point )
 {
-    Q3ListViewItem *item = m_view->itemAt( point );
+    QTreeWidgetItem *item = m_view->itemAt( point );
     if ( item ) {
         QString text = static_cast<KonqSidebarTreeItem*>( item )->toolTipText();
         if ( !text.isEmpty() )
@@ -1100,7 +1107,8 @@ bool KonqSidebarTree::eventFilter(QObject* obj, QEvent* ev)
             return true;
         }
     }
-    return K3ListView::eventFilter(obj, ev);
+    //return K3ListView::eventFilter(obj, ev);
+    return QTreeWidget::eventFilter(obj, ev);
 }
 
 #include "konq_sidebartree.moc"

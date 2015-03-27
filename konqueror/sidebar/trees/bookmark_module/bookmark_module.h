@@ -51,8 +51,8 @@ public:
 
 protected Q_SLOTS:
     void slotBookmarksChanged( const QString & );
-    void slotMoved(Q3ListViewItem*,Q3ListViewItem*,Q3ListViewItem*);
-    void slotDropped(K3ListView*,QDropEvent*,Q3ListViewItem*,Q3ListViewItem*);
+	void slotMoved(QTreeWidgetItem*,QTreeWidgetItem*,QTreeWidgetItem*);
+	void slotDropped(K3ListView*,QDropEvent*,QTreeWidgetItem*,QTreeWidgetItem*);
     void slotCreateFolder();
     void slotDelete();
     void slotProperties(KonqSidebarBookmarkItem *bi = 0);
@@ -66,7 +66,7 @@ protected:
     KonqSidebarBookmarkItem * findByAddress( const QString & address ) const;
 
 private Q_SLOTS:
-    void slotOpenChange(Q3ListViewItem*);
+	void slotOpenChange(QTreeWidgetItem*);
 
 private:
     KonqSidebarTreeTopLevelItem * m_topLevelItem;
