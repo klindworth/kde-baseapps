@@ -45,6 +45,8 @@ public:
     void repaint();
     void setVisible(bool);
     bool isSelectable() const;
+protected:
+    bool m_expandable;
 };
 
 /**

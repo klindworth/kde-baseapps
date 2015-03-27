@@ -23,7 +23,7 @@
 
 #include "kdebug.h"
 
-CompatTreeItem::CompatTreeItem(KonqSidebarTree *ptree) : QTreeWidgetItem(ptree) {}
+CompatTreeItem::CompatTreeItem(KonqSidebarTree *ptree) : QTreeWidgetItem(ptree), m_expandable(false) {}
 bool CompatTreeItem::isOpen() const
 {
     return isExpanded(); //unsure
@@ -46,11 +46,16 @@ void CompatTreeItem::setPixmap(int col, QPixmap pix)
 
 bool CompatTreeItem::isExpandable() const
 {
-    return this->childCount() > 0;
+    return this->childCount() > 0 || m_expandable;
 }
 
-void CompatTreeItem::setExpandable(bool exp) {
-	kDebug(1201) << "setExpandable " << (exp ? "true" : "false");
+void CompatTreeItem::setExpandable(bool expandable) {
+    kDebug(1201) << "setExpandable " << (expandable ? "true" : "false");
+    if(expandable)
+        setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
+    else
+        setChildIndicatorPolicy(QTreeWidgetItem::DontShowIndicatorWhenChildless);
+    m_expandable = expandable;
 }
 
 void CompatTreeItem::repaint() {}
