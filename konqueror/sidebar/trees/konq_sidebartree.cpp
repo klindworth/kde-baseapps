@@ -159,15 +159,15 @@ KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *par
     connect( m_autoOpenTimer, SIGNAL(timeout()),
              this, SLOT(slotAutoOpenFolder()) );
 
-    connect( this, SIGNAL(doubleClicked(QTreeWidgetItem*)),
+	connect( this, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
              this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
     connect( this, SIGNAL(mouseButtonPressed(int,QTreeWidgetItem*,QPoint,int)),
              this, SLOT(slotMouseButtonPressed(int,QTreeWidgetItem*,QPoint,int)) );
-    connect( this, SIGNAL(mouseButtonClicked(int,QTreeWidgetItem*,QPoint,int)),
+	connect( this, SIGNAL(itemClicked(QTreeWidgetItem*,int)),
              this, SLOT(slotMouseButtonClicked(int,QTreeWidgetItem*,QPoint,int)) );
     connect( this, SIGNAL(returnPressed(QTreeWidgetItem*)),
              this, SLOT(slotDoubleClicked(QTreeWidgetItem*)) );
-    connect( this, SIGNAL(selectionChanged()),
+	connect( this, SIGNAL(itemSelectionChanged()),
              this, SLOT(slotSelectionChanged()) );
     connect(qApp->clipboard(), SIGNAL(dataChanged()),
             this, SLOT(slotSelectionChanged())); // so that "paste" can be updated
@@ -554,7 +554,7 @@ void KonqSidebarTree::slotMouseButtonPressed( int _button, QTreeWidgetItem* _ite
     }
 }
 
-void KonqSidebarTree::slotMouseButtonClicked(int _button, QTreeWidgetItem* _item, const QPoint&, int col)
+/*void KonqSidebarTree::slotMouseButtonClicked(int _button, QTreeWidgetItem* _item, const QPoint&, int col)
 {
     KonqSidebarTreeItem * item = static_cast<KonqSidebarTreeItem*>(_item);
     if(_item && col < 2)
@@ -568,6 +568,15 @@ void KonqSidebarTree::slotMouseButtonClicked(int _button, QTreeWidgetItem* _item
             break;
         }
     }
+}*/
+
+void KonqSidebarTree::slotMouseButtonClicked(QTreeWidgetItem* _item, int col)
+{
+	KonqSidebarTreeItem * item = static_cast<KonqSidebarTreeItem*>(_item);
+	if(_item && col < 2)
+	{
+			slotExecuted( item );
+	}
 }
 
 void KonqSidebarTree::slotAutoOpenFolder()

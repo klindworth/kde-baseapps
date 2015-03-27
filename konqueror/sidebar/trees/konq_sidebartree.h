@@ -209,7 +209,8 @@ private slots:
     void slotDoubleClicked( QTreeWidgetItem *item );
     void slotExecuted( QTreeWidgetItem *item );
     void slotMouseButtonPressed(int _button, QTreeWidgetItem* _item, const QPoint&, int col);
-    void slotMouseButtonClicked(int _button, QTreeWidgetItem* _item, const QPoint&, int col);
+	//void slotMouseButtonClicked(int _button, QTreeWidgetItem* _item, const QPoint&, int col);
+	void slotMouseButtonClicked(QTreeWidgetItem* _item, int col);
     void slotSelectionChanged();
 
     void slotAnimation();
