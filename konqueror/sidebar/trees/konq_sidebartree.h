@@ -29,7 +29,6 @@
 #include <QPixmap>
 #include <QtCore/QByteRef>
 #include <QKeyEvent>
-#include <Qt3Support/Q3PtrList>
 #include <QtCore/QEvent>
 #include <QTreeWidget>
 
@@ -241,10 +240,10 @@ private:
     bool overrideShortcut(const QKeyEvent* e);
 
 private:
-    Q3PtrList<KonqSidebarTreeTopLevelItem> m_topLevelItems;
+    QList<KonqSidebarTreeTopLevelItem*> m_topLevelItems;
     KonqSidebarTreeTopLevelItem *m_currentTopLevelItem;
 
-    Q3PtrList<KonqSidebarTreeModule> m_lstModules;
+    QList<KonqSidebarTreeModule*> m_lstModules;
 
     KonqSidebarOldTreeModule *m_sidebarModule;
 

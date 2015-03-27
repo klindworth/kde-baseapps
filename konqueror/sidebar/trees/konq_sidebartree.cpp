@@ -25,7 +25,6 @@
 #include <QClipboard>
 #include <QCursor>
 #include <QtCore/QDir>
-#include <Qt3Support/Q3Header>
 #include <QMenu>
 #include <QtCore/QTimer>
 #include <QApplication>
@@ -136,7 +135,6 @@ KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *par
     setAcceptDrops( true );
     viewport()->setAcceptDrops( true );
     installEventFilter(this);
-    m_lstModules.setAutoDelete( true );
 
     setSelectionMode( QTreeWidget::SingleSelection );
     setDragEnabled(true);
@@ -266,6 +264,8 @@ void KonqSidebarTree::setDropFormats(const QStringList &formats)
 
 void KonqSidebarTree::clearTree()
 {
+    for(QList<KonqSidebarTreeModule*>::iterator it = m_lstModules.begin(); it != m_lstModules.end(); ++it)
+        delete *it;
     m_lstModules.clear();
     m_topLevelItems.clear();
     m_mapCurrentOpeningFolders.clear();
@@ -293,12 +293,13 @@ void KonqSidebarTree::followURL( const KUrl &url )
     }
 
     kDebug(1201) << url.url();
-    Q3PtrListIterator<KonqSidebarTreeTopLevelItem> topItem ( m_topLevelItems );
-    for (; topItem.current(); ++topItem )
+    QListIterator<KonqSidebarTreeTopLevelItem*> topItem ( m_topLevelItems );
+    while(topItem.hasNext())
     {
-        if ( topItem.current()->externalURL().isParentOf( url ) )
+        KonqSidebarTreeTopLevelItem* citem = topItem.next();
+        if ( citem->externalURL().isParentOf( url ) )
         {
-            topItem.current()->module()->followURL( url );
+            citem->module()->followURL( url );
             return; // done
         }
     }

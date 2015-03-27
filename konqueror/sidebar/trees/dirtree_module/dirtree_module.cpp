@@ -29,7 +29,7 @@
 #include <kiconloader.h>
 #include <kdirlister.h>
 #include <klocale.h>
-
+#include <Q3PtrList>
 
 KonqSidebarDirTreeModule::KonqSidebarDirTreeModule( KonqSidebarTree * parentTree , bool showHidden)
     : KonqSidebarTreeModule( parentTree, showHidden ), m_dirLister(0L), m_topLevelItem(0L)
