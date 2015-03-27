@@ -136,7 +136,7 @@ void KonqSidebarDirTreeModule::addSubDir( KonqSidebarTreeItem *item )
 
 // Remove <key, item> from dict, taking into account that there maybe
 // other items with the same key.
-static void remove(Q3Dict<KonqSidebarTreeItem> &dict, const QString &key, KonqSidebarTreeItem *item)
+static void remove(QMultiHash<QString, KonqSidebarTreeItem*> &dict, const QString &key, KonqSidebarTreeItem *item)
 {
     Q3PtrList<KonqSidebarTreeItem> *otherItems = 0;
     while(true) {
@@ -165,7 +165,7 @@ static void remove(Q3Dict<KonqSidebarTreeItem> &dict, const QString &key, KonqSi
 // Looks up key in dict and returns it in item, if there are multiple items
 // with the same key, additional items are returned in itemList which should
 // be deleted by the caller.
-static void lookupItems(Q3Dict<KonqSidebarTreeItem> &dict, const QString &key, KonqSidebarTreeItem *&item, Q3PtrList<KonqSidebarTreeItem> *&itemList)
+static void lookupItems(QMultiHash<QString, KonqSidebarTreeItem*> &dict, const QString &key, KonqSidebarTreeItem *&item, Q3PtrList<KonqSidebarTreeItem> *&itemList)
 {
     itemList = 0;
     item = dict.take(key);
@@ -597,7 +597,7 @@ void KonqSidebarDirTreeModule::slotListingStopped( const KUrl & url )
 void KonqSidebarDirTreeModule::followURL( const KUrl & url )
 {
     // Check if we already know this URL
-    KonqSidebarTreeItem * item = m_dictSubDirs[ url.url( KUrl::RemoveTrailingSlash ) ];
+    KonqSidebarTreeItem * item = m_dictSubDirs.value( url.url( KUrl::RemoveTrailingSlash ) );
     if (item) // found it  -> ensure visible, select, return.
     {
         m_pTree->ensureItemVisible( item );
@@ -611,7 +611,7 @@ void KonqSidebarDirTreeModule::followURL( const KUrl & url )
     do
     {
         uParent = uParent.upUrl();
-        parentItem = m_dictSubDirs[ uParent.url( KUrl::RemoveTrailingSlash ) ];
+        parentItem = m_dictSubDirs.value( uParent.url( KUrl::RemoveTrailingSlash ) );
     } while ( !parentItem && !uParent.path().isEmpty() && uParent.path() != "/" );
 
     // Not found !?!
@@ -626,7 +626,7 @@ void KonqSidebarDirTreeModule::followURL( const KUrl & url )
     if ( !parentItem->isOpen() )
     {
         parentItem->setOpen( true );
-        if ( parentItem->childCount() && m_dictSubDirs[ url.url( KUrl::RemoveTrailingSlash ) ] )
+        if ( parentItem->childCount() && m_dictSubDirs.value( url.url( KUrl::RemoveTrailingSlash ) ) )
         {
             // Immediate opening, if the dir was already listed
             followURL( url ); // equivalent to a goto-beginning-of-method
