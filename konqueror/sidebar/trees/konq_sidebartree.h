@@ -62,6 +62,7 @@ enum DropAcceptType {
 
 class CompatTree : public QTreeWidget
 {
+    Q_OBJECT
 public:
     CompatTree(QWidget * parent) : QTreeWidget(parent) {}
 
@@ -79,8 +80,7 @@ public:
 
     void ensureItemVisible(QTreeWidgetItem * item)
     {
-        //TODO KF5 port
-        Q_UNUSED(item);
+        scrollToItem(item);
     }
 
     void rename(KonqSidebarTreeItem*,int)
@@ -99,9 +99,17 @@ public:
         return p;
     }
 
+public slots:
+    //compat
+    void setSelected(QTreeWidgetItem *item, bool selected) {
+        if(selected)
+            setCurrentItem(item);
+        else
+            clearSelection();
+    }
+
 protected:
 
-    //TODO KF5 port: remember! these are never called, QTreeWidget doesn't have these functions
     virtual void contentsDragEnterEvent( QDragEnterEvent *e ) {Q_UNUSED(e);}
     virtual void contentsDragMoveEvent( QDragMoveEvent *e ) {Q_UNUSED(e);}
     virtual void contentsDragLeaveEvent( QDragLeaveEvent *e ) {Q_UNUSED(e);}
@@ -122,6 +130,12 @@ protected:
 
     virtual void dropEvent ( QDropEvent * event ) {
         contentsDropEvent(event);
+    }
+
+    virtual void setContentsPos( int x, int y ) {
+        //TODO: KF5 port
+        Q_UNUSED(x);
+        Q_UNUSED(y);
     }
 };
 
@@ -176,12 +190,6 @@ public slots:
 
     virtual void setContentsPos( int x, int y );
 
-    //compat
-    void setSelected(QTreeWidgetItem *item, bool unknown = false) {
-        Q_UNUSED(unknown);
-        setCurrentItem(item);
-    }
-
 protected:
     virtual void contentsDragEnterEvent( QDragEnterEvent *e );
     virtual void contentsDragMoveEvent( QDragMoveEvent *e );
@@ -193,6 +201,7 @@ protected:
     virtual void leaveEvent( QEvent * );
 
     virtual Q3DragObject* dragObject();
+    virtual QDrag* dragObjectKF5();
 
 
 private slots:

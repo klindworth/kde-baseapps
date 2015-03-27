@@ -500,6 +500,30 @@ Q3DragObject* KonqSidebarTree::dragObject()
     //return drag;
 }
 
+QDrag* KonqSidebarTree::dragObjectKF5()
+{
+    KonqSidebarTreeItem* item = static_cast<KonqSidebarTreeItem *>( selectedItem() );
+    if ( !item )
+        return 0;
+
+    QMimeData *mimeData = new QMimeData;
+    if ( item->populateMimeData( mimeData, false ) )
+    {
+        QDrag* drag = new QDrag( viewport() );
+        drag->setMimeData(mimeData);
+        const QPixmap *pix = item->pixmap(0);
+        if ( pix && drag->pixmap().isNull() )
+            drag->setPixmap( *pix );
+        return drag;
+    }
+    else
+    {
+        delete mimeData;
+        mimeData = 0;
+        return 0;
+    }
+}
+
 void KonqSidebarTree::leaveEvent( QEvent *e )
 {
     QTreeWidget::leaveEvent(e);
@@ -892,9 +916,8 @@ KonqSidebarTreeItem * KonqSidebarTree::currentItem() const
 
 void KonqSidebarTree::setContentsPos( int x, int y )
 {
-    //TODO KF5 port
-    //if ( !m_scrollingLocked )
-        //K3ListView::setContentsPos( x, y );
+    if ( !m_scrollingLocked )
+        CompatTree::setContentsPos( x, y );
 }
 
 void KonqSidebarTree::slotItemRenamed(QTreeWidgetItem* item, const QString &name, int col)

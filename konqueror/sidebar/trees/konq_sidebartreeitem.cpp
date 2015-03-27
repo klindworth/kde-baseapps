@@ -52,7 +52,8 @@ void CompatTreeItem::setExpandable(bool) {
 
 void CompatTreeItem::repaint() {}
 
-void CompatTreeItem::setVisible(bool) {
+void CompatTreeItem::setVisible(bool vis) {
+    this->setHidden(!vis);
 }
 
 bool CompatTreeItem::isSelectable() const {
