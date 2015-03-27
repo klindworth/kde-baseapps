@@ -22,8 +22,6 @@
 
 #include <QListView>
 #include <QtCore/QStringList>
-#include <Qt3Support/Q3ListView>
-#include <Qt3Support/Q3UriDrag>
 #include <kurl.h>
 #include <QTreeWidgetItem>
 
@@ -65,7 +63,7 @@ public:
     virtual ~KonqSidebarTreeItem();
 
     // Whether the item accepts a drop consisting in those @p formats
-    virtual bool acceptsDrops( const Q3StrList & ) { return false; }
+    virtual bool acceptsDrops( const QStringList & ) { return false; }
 
     // Handle a drop on this item. If you didn't want it, you shouln't
     // have return true in acceptsDrops :)

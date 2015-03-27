@@ -20,12 +20,10 @@
 #ifndef KONQ_SIDEBARTREE_H
 #define KONQ_SIDEBARTREE_H
 
-#include <k3listview.h>
 #include <kparts/browserextension.h>
 #include "konq_sidebartreetoplevelitem.h"
 #include <QtCore/QMap>
 #include <QtCore/QPoint>
-#include <Qt3Support/Q3StrList>
 
 //Added by qt3to4:
 #include <QPixmap>
@@ -144,12 +142,6 @@ protected:
     virtual void dropEvent ( QDropEvent * event ) {
         contentsDropEvent(event);
     }
-
-    /*virtual void setContentsPos( int x, int y ) {
-        //TODO: KF5 port
-        Q_UNUSED(x);
-        Q_UNUSED(y);
-    }*/
 };
 
 /**
@@ -201,8 +193,6 @@ public slots:
     void slotFilesRemoved( const QStringList & urls );
     void slotFilesChanged( const QStringList & urls );
 
-    //virtual void setContentsPos( int x, int y );
-
 protected:
     virtual void contentsDragEnterEvent( QDragEnterEvent *e );
     virtual void contentsDragMoveEvent( QDragMoveEvent *e );
@@ -213,8 +203,7 @@ protected:
     virtual bool eventFilter(QObject* obj, QEvent* ev);
     virtual void leaveEvent( QEvent * );
 
-    virtual Q3DragObject* dragObject();
-    virtual QDrag* dragObjectKF5();
+    virtual QDrag* dragObject();
 
 
 private slots:
@@ -276,15 +265,13 @@ private:
 
     KonqSidebarTreeItem *m_currentBeforeDropItem; // The item that was current before the drag-enter event happened
     KonqSidebarTreeItem *m_dropItem; // The item we are moving the mouse over (during a drag)
-    Q3StrList m_lstDropFormats;
+    QStringList m_lstDropFormats;
 
     QTimer *m_autoOpenTimer;
 
     // The base URL for our configuration directory
     //KUrl m_dirtreeDir;
     DirTreeConfigData m_dirtreeDir;
-
-    bool m_scrollingLocked;
 
     getModule getPluginFactory(const QString &name);
 

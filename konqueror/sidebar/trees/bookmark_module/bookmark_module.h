@@ -27,6 +27,8 @@
 #include <kdialog.h>
 #include <klocale.h>
 
+#include <k3listview.h>
+
 class KActionCollection;
 class KLineEdit;
 class KBookmarkGroup;
